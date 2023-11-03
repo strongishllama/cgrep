@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	if len(os.Args) == 1 || os.Args[1] == "-h" || os.Args[1] == "--help" {
+	if len(os.Args) != 2 || os.Args[1] == "-h" || os.Args[1] == "--help" {
 		log.Fatalln("invalid arguments, expected cgrep <expression>")
 	}
 	file, err := os.Stdin.Stat()
@@ -23,9 +23,10 @@ func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		text := scanner.Text()
+		arg := strings.TrimSpace(os.Args[1])
 
-		if strings.Contains(text, os.Args[1]) {
-			text = strings.ReplaceAll(text, os.Args[1], fmt.Sprintf("\033[1;31m%s\033[0m", os.Args[1]))
+		if strings.Contains(text, arg) {
+			text = strings.ReplaceAll(text, arg, fmt.Sprintf("\033[1;31m%s\033[0m", arg))
 		}
 
 		fmt.Println(text)
