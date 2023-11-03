@@ -9,8 +9,15 @@ import (
 )
 
 func main() {
-	if len(os.Args) == 1 {
-		log.Fatalln("invalid arguments, expected expression to search for")
+	if len(os.Args) == 1 || os.Args[1] == "-h" || os.Args[1] == "--help" {
+		log.Fatalln("invalid arguments, expected cgrep <expression>")
+	}
+	file, err := os.Stdin.Stat()
+	if err != nil {
+		log.Fatalf("failed to stat stdin: %v\n", err)
+	}
+	if file.Size() == 0 {
+		log.Fatalln("stdin is empty, nothing to parse")
 	}
 
 	scanner := bufio.NewScanner(os.Stdin)
